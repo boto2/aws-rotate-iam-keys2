@@ -78,7 +78,7 @@ if __name__ == '__main__':
     jenkins_password = parser.parse_args().jenkins_password
     jenkins_credentials_description = parser.parse_args().credentials_description
     aws_user_to_update = parser.parse_args().aws_user_to_update
-
+    print "jenkins_credentials_description={}".format(jenkins_credentials_description)
     session = boto3.Session(profile_name=aws_profile_name)
     iam_client = session.client('iam')
     j = Jenkins(baseurl='http://35.163.202.14:8080/', username=jenkins_user, password=jenkins_password, lazy=True)
