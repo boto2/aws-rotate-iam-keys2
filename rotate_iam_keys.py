@@ -22,7 +22,7 @@ def delete_keys(users, iam, jenkins_conn, jenkins_credentials_description, aws_u
         if user == aws_user_to_update:
             rotate_keys_for_user(user_name=user, iam=iam, jenkins_conn=jenkins_conn, jenkins_credentials_description=jenkins_credentials_description, aws_user_to_update=aws_user_to_update)
         else:
-            print("Skipping user {}".format(user))        
+            print "Skipping user {}".format(user)        
 
 
 def rotate_keys_for_user(user_name, iam, jenkins_conn, jenkins_credentials_description, aws_user_to_update):
@@ -31,9 +31,9 @@ def rotate_keys_for_user(user_name, iam, jenkins_conn, jenkins_credentials_descr
         if all_keys is not None:
             for key in all_keys:
                 key_id = key.get("AccessKeyId")
-                print("Deleting key {} for user {}".format(key_id, user_name))
+                print "Deleting key {} for user {}".format(key_id, user_name)
                 iam.delete_access_key(UserName=user_name, AccessKeyId=key_id)
-            print("Creating a new key for user {}".format(user_name))
+            print "Creating a new key for user {}".format(user_name)
             res = iam.create_access_key(UserName=user_name)                                     
             if user_name == aws_user_to_update:
                 access_key = res.get("AccessKey")
@@ -45,11 +45,11 @@ def rotate_keys_for_user(user_name, iam, jenkins_conn, jenkins_credentials_descr
                     "accessKey": key_id,
                     "secretKey": secret_key
                 }
-                print("Updating Jenkins credentials {} with the AWS user name {} and with the key ID {}".format(jenkins_credentials_description, user_name, key_id))
+                print "Updating Jenkins credentials {} with the AWS user name {} and with the key ID {}".format(jenkins_credentials_description, user_name, key_id)
                 creds[jenkins_credentials_description] = AmazonWebServicesCredentials(aws_creds)
 
     except Exception as e:
-        print("There was an error")
+        print "There was an error"
 
 
 if __name__ == '__main__':
@@ -81,6 +81,6 @@ if __name__ == '__main__':
 
     session = boto3.Session(profile_name=aws_profile_name)
     iam_client = session.client('iam')
-    j = Jenkins(baseurl='http://10.56.27.129:8080', username=jenkins_user, password=jenkins_password, lazy=True)
+    j = Jenkins(baseurl='http://35.163.202.14:8080/', username=jenkins_user, password=jenkins_password, lazy=True)
     all_users = get_all_users(iam=iam_client)
     delete_keys(users=all_users, iam=iam_client, jenkins_conn=j, jenkins_credentials_description=jenkins_credentials_description, aws_user_to_update=aws_user_to_update)
