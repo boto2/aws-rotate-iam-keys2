@@ -50,6 +50,8 @@ def rotate_keys_for_user(user_name, iam, jenkins_conn, jenkins_credentials_descr
 
     except Exception as e:
         print "There was an error"
+        print "{}".format(e)
+        raise e
 
 
 if __name__ == '__main__':
