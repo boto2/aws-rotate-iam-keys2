@@ -74,15 +74,19 @@ if __name__ == '__main__':
     parser.add_argument('--aws-user-to-update',
                         required=True,
                         help='The aws user to update')
+    parser.add_argument('--jenkins-server',
+                        required=True,
+                        help='The server or IP of the jenkins')
 
     aws_profile_name = parser.parse_args().profile_name
     jenkins_user = parser.parse_args().jenkins_user
     jenkins_password = parser.parse_args().jenkins_password
     jenkins_credentials_description = parser.parse_args().credentials_description
     aws_user_to_update = parser.parse_args().aws_user_to_update
+    jenkins_server = parser.parse_args().jenkins_server
     print "jenkins_credentials_description={}".format(jenkins_credentials_description)
     session = boto3.Session(profile_name=aws_profile_name)
     iam_client = session.client('iam')
-    j = Jenkins(baseurl='http://34.217.104.12:8080/', username=jenkins_user, password=jenkins_password, lazy=True, timeout=30)
+    j = Jenkins(baseurl=jenkins_server, username=jenkins_user, password=jenkins_password, lazy=True, timeout=30)
     all_users = get_all_users(iam=iam_client)
     delete_keys(users=all_users, iam=iam_client, jenkins_conn=j, jenkins_credentials_description=jenkins_credentials_description, aws_user_to_update=aws_user_to_update)
